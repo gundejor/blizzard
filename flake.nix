@@ -13,13 +13,18 @@
             inherit system;
             config.allowUnfree = true;
           };
-          # ponytail: nixpkgs' CLI snapshot tests currently fail; remove when the package builds normally.
-          snowflake-cli = pkgs.snowflake-cli.overridePythonAttrs (_: { doCheck = false; });
+          # ponytail: nixpkgs is older than DCM GA; use its package when it reaches CLI 3.24+.
+          snow = pkgs.writeShellScriptBin "snow" ''
+            exec ${pkgs.uv}/bin/uvx \
+              --python ${pkgs.python313}/bin/python3.13 \
+              --from snowflake-cli==3.27.0 \
+              snow "$@"
+          '';
         in {
           default = pkgs.mkShell {
             packages = [
               pkgs.terraform
-              snowflake-cli
+              snow
             ];
           };
         });
