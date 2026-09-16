@@ -9,12 +9,18 @@
     in {
       devShells = nixpkgs.lib.genAttrs systems (system:
         let
-          pkgs = import nixpkgs { inherit system; };
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
           # ponytail: nixpkgs' CLI snapshot tests currently fail; remove when the package builds normally.
           snowflake-cli = pkgs.snowflake-cli.overridePythonAttrs (_: { doCheck = false; });
         in {
           default = pkgs.mkShell {
-            packages = [ snowflake-cli ];
+            packages = [
+              pkgs.terraform
+              snowflake-cli
+            ];
           };
         });
     };
