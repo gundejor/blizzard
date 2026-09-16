@@ -1,0 +1,11 @@
+manifest_version: 2
+
+type: DCM_PROJECT
+
+default_target: DEV
+
+targets:
+  DEV:
+    account_identifier: PWFXIHI-MQ77475
+    project_name: SNOWFLAKE_LEARNING_DB.DCM.BLIZZARD_DEV
+    project_owner: ACCOUNTADMIN
