@@ -9,3 +9,35 @@ targets:
     account_identifier: PWFXIHI-MQ77475
     project_name: SNOWFLAKE_LEARNING_DB.DCM.BLIZZARD_DEV
     project_owner: ACCOUNTADMIN
+    templating_config: DEV
+
+templating:
+  defaults:
+    object_model:
+      project: BLZ
+      database:
+        purpose: ANALYTICS
+        scopes:
+          - name: TRANSFORM
+            access: RW
+          - name: REPORTING
+            access: RO
+      warehouses:
+        - purpose: TRANSFORM
+          size: X-SMALL
+        - purpose: REPORTING
+          size: X-SMALL
+      composite_roles:
+        - kind: SVC
+          name: DBT_TRANSFORM
+          scope: TRANSFORM
+          access: RW
+          warehouse: TRANSFORM
+        - kind: FR
+          name: ANALYST
+          scope: REPORTING
+          access: RO
+          warehouse: REPORTING
+
+  configurations:
+    DEV: {}

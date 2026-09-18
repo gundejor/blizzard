@@ -1,5 +1,0 @@
-DEFINE DATABASE BLIZZARD_SANDBOX
-  COMMENT = 'Blizzard learning sandbox';
-
-DEFINE SCHEMA BLIZZARD_SANDBOX.PLAYGROUND
-  COMMENT = 'Hands-on Snowflake experiments';
