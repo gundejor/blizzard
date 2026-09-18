@@ -15,13 +15,23 @@ templating:
   defaults:
     object_model:
       project: BLZ
-      database:
-        purpose: ANALYTICS
-        scopes:
-          - name: TRANSFORM
-            access: RW
-          - name: REPORTING
-            access: RO
+      databases:
+        - purpose: ANALYTICS
+          schemas:
+            - name: TRANSFORM
+              access:
+                - RW
+            - name: REPORTING
+              access:
+                - RO
+        - purpose: FINANCE
+          schemas:
+            - name: TRANSFORM
+              access:
+                - RW
+            - name: REPORTING
+              access:
+                - RO
       warehouses:
         - purpose: TRANSFORM
           size: X-SMALL
@@ -30,12 +40,26 @@ templating:
       composite_roles:
         - kind: SVC
           name: DBT_TRANSFORM
-          scope: TRANSFORM
+          database: ANALYTICS
+          schema: TRANSFORM
           access: RW
           warehouse: TRANSFORM
         - kind: FR
           name: ANALYST
-          scope: REPORTING
+          database: ANALYTICS
+          schema: REPORTING
+          access: RO
+          warehouse: REPORTING
+        - kind: SVC
+          name: DBT_FINANCE_TRANSFORM
+          database: FINANCE
+          schema: TRANSFORM
+          access: RW
+          warehouse: TRANSFORM
+        - kind: FR
+          name: ANALYST_FINANCE
+          database: FINANCE
+          schema: REPORTING
           access: RO
           warehouse: REPORTING
 
