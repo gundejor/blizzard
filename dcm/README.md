@@ -33,26 +33,27 @@ The declaration produces independent database packages:
 ```text
 BLZ_ANALYTICS
 ├── TRANSFORM
-│   └── DBR_TRANSFORM_RW
-└── REPORTING
-    └── DBR_REPORTING_RO
+├── REPORTING
+├── DBR_ALL_RO
+└── DBR_ALL_RW
 
 BLZ_FINANCE
 ├── TRANSFORM
-│   └── DBR_TRANSFORM_RW
-└── REPORTING
-    └── DBR_REPORTING_RO
+├── REPORTING
+├── DBR_ALL_RO
+└── DBR_ALL_RW
 ```
 
 Add another entry under `object_model.databases` to create another package from
-the same SQL. Each schema may request one or more supported access levels. Add
-composite roles separately so their database, schema, access, and warehouse
-relationships remain explicit.
+the same SQL. Every database receives one read-only and one read/write primitive
+database role. Composite roles select a database access level and a warehouse.
+Schema-specific roles can be added later when a real access boundary requires
+them.
 
 `RO` grants inherited read access to current and future tables, views, and
-dynamic tables. `RW` additionally grants inherited table DML and schema
-privileges to create tables, views, and dynamic tables; objects created by the
-dbt role remain owned by that role in this sandbox model.
+dynamic tables across the database. `RW` additionally grants inherited table
+DML and creation privileges on each declared schema; objects created by the dbt
+role remain owned by that role in this sandbox model.
 
 - [DCM Projects](https://docs.snowflake.com/en/user-guide/dcm-projects/dcm-projects-overview)
 - [Snowflake CLI DCM commands](https://docs.snowflake.com/en/developer-guide/snowflake-cli/data-pipelines/dcm-projects)

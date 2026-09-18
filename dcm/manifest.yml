@@ -18,20 +18,12 @@ templating:
       databases:
         - purpose: ANALYTICS
           schemas:
-            - name: TRANSFORM
-              access:
-                - RW
-            - name: REPORTING
-              access:
-                - RO
+            - TRANSFORM
+            - REPORTING
         - purpose: FINANCE
           schemas:
-            - name: TRANSFORM
-              access:
-                - RW
-            - name: REPORTING
-              access:
-                - RO
+            - TRANSFORM
+            - REPORTING
       warehouses:
         - purpose: TRANSFORM
           size: X-SMALL
@@ -41,25 +33,21 @@ templating:
         - kind: SVC
           name: DBT_TRANSFORM
           database: ANALYTICS
-          schema: TRANSFORM
           access: RW
           warehouse: TRANSFORM
         - kind: FR
           name: ANALYST
           database: ANALYTICS
-          schema: REPORTING
           access: RO
           warehouse: REPORTING
         - kind: SVC
           name: DBT_FINANCE_TRANSFORM
           database: FINANCE
-          schema: TRANSFORM
           access: RW
           warehouse: TRANSFORM
         - kind: FR
           name: ANALYST_FINANCE
           database: FINANCE
-          schema: REPORTING
           access: RO
           warehouse: REPORTING
 

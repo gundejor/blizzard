@@ -17,7 +17,7 @@ GRANT USAGE ON WAREHOUSE {{ warehouse_name }} TO ROLE {{ warehouse_role }};
 {% for role in object_model.composite_roles %}
 {% set composite_role = object_model.project ~ '_' ~ role.kind ~ '_' ~ role.name %}
 {% set database_name = object_model.project ~ '_' ~ role.database %}
-{% set database_role = database_name ~ '.DBR_' ~ role.schema ~ '_' ~ role.access %}
+{% set database_role = database_name ~ '.DBR_ALL_' ~ role.access %}
 {% set warehouse_role = object_model.project ~ '_WH_' ~ role.warehouse ~ '_USE' %}
 DEFINE ROLE {{ composite_role }};
 GRANT DATABASE ROLE {{ database_role }} TO ROLE {{ composite_role }};
