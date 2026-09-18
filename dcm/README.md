@@ -10,6 +10,16 @@ snow dcm deploy -c blizzard-hq
 
 Always review `plan` before `deploy`. `SNOWFLAKE_LEARNING_DB.DCM` is the manually bootstrapped container for the DCM Project itself; DCM manages the declared objects.
 
+The model uses DCM inherited grants so access applies to current and future
+objects. This opt-in Snowflake feature must be enabled once by `ACCOUNTADMIN`
+before deployment:
+
+```sql
+ALTER ACCOUNT SET FEATURE_RBAC_INHERITED_GRANTS = 'ENABLED';
+```
+
+Inherited grants are currently a Public Preview feature.
+
 ## Object model
 
 `manifest.yml` contains the canonical `object_model` declaration. The Jinja in
@@ -29,7 +39,8 @@ BLZ_FR_ANALYST
 ```
 
 Add scopes, workloads, and composite roles in the manifest rather than copying
-SQL definitions. `RO` grants read access. `RW` additionally grants table DML and
+SQL definitions. `RO` grants inherited read access to current and future tables,
+views, and dynamic tables. `RW` additionally grants inherited table DML and
 schema privileges to create tables, views, and dynamic tables; objects created
 by the dbt role remain owned by that role in this sandbox model.
 

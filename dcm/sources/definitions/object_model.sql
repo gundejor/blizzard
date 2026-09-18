@@ -13,11 +13,13 @@ GRANT USAGE ON DATABASE {{ database_name }} TO DATABASE ROLE {{ database_role }}
 GRANT USAGE ON SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
 
 {% if scope.access == 'RO' %}
-GRANT SELECT ON ALL TABLES IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
-GRANT SELECT ON ALL VIEWS IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
+GRANT INHERITED SELECT ON ALL TABLES IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
+GRANT INHERITED SELECT ON ALL VIEWS IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
+GRANT INHERITED SELECT ON ALL DYNAMIC TABLES IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
 {% elif scope.access == 'RW' %}
-GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE ON ALL TABLES IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
-GRANT SELECT ON ALL VIEWS IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
+GRANT INHERITED SELECT, INSERT, UPDATE, DELETE, TRUNCATE ON ALL TABLES IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
+GRANT INHERITED SELECT ON ALL VIEWS IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
+GRANT INHERITED SELECT ON ALL DYNAMIC TABLES IN SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
 GRANT CREATE TABLE, CREATE VIEW, CREATE DYNAMIC TABLE ON SCHEMA {{ database_name }}.{{ scope.name }} TO DATABASE ROLE {{ database_role }};
 {% else %}
 UNSUPPORTED ACCESS LEVEL {{ scope.access }} FOR {{ database_role }};
