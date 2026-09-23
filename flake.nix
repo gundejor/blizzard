@@ -24,6 +24,7 @@
           default = pkgs.mkShell {
             packages = [
               pkgs.just
+              pkgs.openssl
               pkgs.terraform
               snow
             ];
