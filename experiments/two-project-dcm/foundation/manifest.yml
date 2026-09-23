@@ -1,0 +1,11 @@
+manifest_version: 2
+
+type: DCM_PROJECT
+
+default_target: TRIAL
+
+targets:
+  TRIAL:
+    account_identifier: PWFXIHI-MQ77475
+    project_name: SNOWFLAKE_LEARNING_DB.DCM.BLZ_DCMX_4X6_FOUNDATION
+    project_owner: BLZ_DCMX_4X6_FOUNDATION_DEPLOYER
