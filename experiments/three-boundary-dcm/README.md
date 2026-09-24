@@ -30,7 +30,7 @@ One database per domain, one representative role of each category, and one optio
 
 This is the **exact proposed set for this test**, deliberately unproven as the minimum. A plan or deploy failure is evidence against it, not authority to add privileges.
 
-1. Jørgen uses privileged administration only to create the exact inventory above, assign `BLZ_DCMX_0M6_DEPLOY_DHUB` only `BLZ_DCMX_0M6_OWN_DHUB` and `BLZ_DCMX_0M6_DEPLOY_DWH` only `BLZ_DCMX_0M6_OWN_DWH`, establish the two named DCM projects, and perform final cleanup.
+1. Jørgen uses privileged administration only to create the privileged-bootstrap-row inventory (ownership roles, deployment identities, DCM project records, and approved delegations) and perform final cleanup; domain objects, roles, and grants are created through Jørgen’s human-run DCM deployments under the matching non-admin owner roles.
 2. `BLZ_DCMX_0M6_OWN_DHUB` and `BLZ_DCMX_0M6_OWN_DWH` each receive only `CREATE DATABASE`, `CREATE ROLE`, and `CREATE WAREHOUSE` on the account. `BLZ_DCMX_0M6_PROJECT_DHUB` is owned and operated by `BLZ_DCMX_0M6_OWN_DHUB`; `BLZ_DCMX_0M6_PROJECT_DWH` is owned and operated by `BLZ_DCMX_0M6_OWN_DWH`. Ownership created through their declarations supplies authority over their own database, schemas, database roles, warehouses and grants.
 3. The exact local compute composition is:
    - `USAGE` on `BLZ_DCMX_0M6_DHUB_WH_INTERACTIVE` to `BLZ_DCMX_0M6_DHUB_WH_INTERACTIVE_USAGE`, then that usage role to `BLZ_DCMX_0M6_DHUB_FUNCTIONAL`;
