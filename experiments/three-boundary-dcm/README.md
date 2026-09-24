@@ -12,15 +12,15 @@ Company accounts and repositories, CI, production hardening, identity lifecycle,
 
 ## Disposable test inventory
 
-Use the fresh prefix `BLZ_DCMX_0M6` in the existing personal Blizzard account. Before bootstrap, Jørgen confirms that no account object or DCM project with that prefix exists. These identifiers and settings are test configuration, not naming or sizing standards.
+Use the fresh prefix `BLZ_DCMX_0M6` in the existing personal Blizzard account. Every account-scoped object and DCM project is named exactly below and starts with that prefix. Database-local objects are exact, fully qualified names inside a prefixed database; they are disposable only as part of that database. Before bootstrap, Jørgen confirms that none of the listed account-scoped objects or projects exists and that neither prefixed database contains a listed local name. Cleanup is bounded to this exact inventory, not a prefix wildcard. These identifiers and settings are test configuration, not naming or sizing standards.
 
 | Boundary | Complete proposed inventory |
 | --- | --- |
-| privileged bootstrap | `OWN_DHUB`, `OWN_DWH`, matching single-role deployment identities, and two populated DCM projects; optional `OWN_PLATFORM`, with no grants, objects, or platform project |
-| DHUB base | functional role, service role, human-interactive warehouse and usage role, service warehouse and usage role, database, `DATA` schema, source table, and source-reader database role |
-| DWH base | functional role, recipient service role, human-interactive warehouse and usage role, service warehouse and usage role, database, `DATA` schema, and local-reader database role |
-| DHUB boundary grant | DHUB source-reader database role granted to the existing DWH recipient service role; DHUB declares the edge and ownership does not move |
-| optional DWH dependent release | one DWH view referencing the DHUB source table, included only to test an object-specific creation dependency |
+| privileged bootstrap | roles `BLZ_DCMX_0M6_OWN_DHUB` and `BLZ_DCMX_0M6_OWN_DWH`; single-role deployment identities `BLZ_DCMX_0M6_DEPLOY_DHUB` and `BLZ_DCMX_0M6_DEPLOY_DWH`; populated projects `BLZ_DCMX_0M6_PROJECT_DHUB` and `BLZ_DCMX_0M6_PROJECT_DWH`; optional role `BLZ_DCMX_0M6_OWN_PLATFORM`, with no grants, identity, objects, or project |
+| DHUB base | roles `BLZ_DCMX_0M6_DHUB_FUNCTIONAL`, `BLZ_DCMX_0M6_DHUB_SERVICE`, `BLZ_DCMX_0M6_DHUB_WH_INTERACTIVE_USAGE`, and `BLZ_DCMX_0M6_DHUB_WH_SERVICE_USAGE`; warehouses `BLZ_DCMX_0M6_DHUB_WH_INTERACTIVE` and `BLZ_DCMX_0M6_DHUB_WH_SERVICE`; database `BLZ_DCMX_0M6_DHUB_DB`; schema `BLZ_DCMX_0M6_DHUB_DB.DATA`; table `BLZ_DCMX_0M6_DHUB_DB.DATA.SOURCE`; database role `BLZ_DCMX_0M6_DHUB_DB.BLZ_DCMX_0M6_SOURCE_READER` |
+| DWH base | roles `BLZ_DCMX_0M6_DWH_FUNCTIONAL`, `BLZ_DCMX_0M6_DWH_SERVICE`, `BLZ_DCMX_0M6_DWH_WH_INTERACTIVE_USAGE`, and `BLZ_DCMX_0M6_DWH_WH_SERVICE_USAGE`; warehouses `BLZ_DCMX_0M6_DWH_WH_INTERACTIVE` and `BLZ_DCMX_0M6_DWH_WH_SERVICE`; database `BLZ_DCMX_0M6_DWH_DB`; schema `BLZ_DCMX_0M6_DWH_DB.DATA`; database role `BLZ_DCMX_0M6_DWH_DB.BLZ_DCMX_0M6_LOCAL_READER` |
+| DHUB boundary grant | `BLZ_DCMX_0M6_DHUB_DB.BLZ_DCMX_0M6_SOURCE_READER` granted to existing `BLZ_DCMX_0M6_DWH_SERVICE`; DHUB declares the edge and ownership does not move |
+| optional DWH dependent release | view `BLZ_DCMX_0M6_DWH_DB.DATA.DHUB_SOURCE` referencing `BLZ_DCMX_0M6_DHUB_DB.DATA.SOURCE`, included only to test an object-specific creation dependency |
 
 Every warehouse is `XSMALL`, initially suspended, with auto-resume enabled and auto-suspend after 60 seconds. Each domain owns its warehouses, their usage roles, and grants of the interactive usage role to its functional role and service usage role to its service role. No role receives the other compute category. Cross-domain reads use DWH service compute, not a DHUB warehouse.
 
@@ -30,12 +30,18 @@ One database per domain, one representative role of each category, and one optio
 
 This is the **exact proposed set for this test**, deliberately unproven as the minimum. A plan or deploy failure is evidence against it, not authority to add privileges.
 
-1. Jørgen uses privileged administration only to create the `OWN_*` roles, deployment identities and DCM project state, assign each deployment identity only its matching `OWN_*` role, and perform final cleanup.
-2. `OWN_DHUB` and `OWN_DWH` each receive only `CREATE DATABASE`, `CREATE ROLE`, and `CREATE WAREHOUSE` on the account. Each matching populated DCM project is owned and operated by that role. Ownership created through those declarations supplies authority over that role's own database, schemas, database roles, warehouses and grants.
-3. `OWN_DHUB`, as owner of the source database role, may grant that database role to the already existing DWH recipient account role. It receives no ownership or administration over the recipient role.
-4. `OWN_PLATFORM`, if bootstrapped, receives no account privilege, inheritance, object, grant, identity, or DCM project in this experiment.
-5. No deployment or workload role receives global `MANAGE GRANTS`, an admin/system role, another domain's ownership role, or secondary-role assistance. Deployment and plan sessions pin the matching identity and primary role with secondary roles disabled.
-6. Functional and service roles receive only their declared database access and the appropriate domain warehouse-usage role. Warehouse usage confers no warehouse ownership or administration.
+1. Jørgen uses privileged administration only to create the exact inventory above, assign `BLZ_DCMX_0M6_DEPLOY_DHUB` only `BLZ_DCMX_0M6_OWN_DHUB` and `BLZ_DCMX_0M6_DEPLOY_DWH` only `BLZ_DCMX_0M6_OWN_DWH`, establish the two named DCM projects, and perform final cleanup.
+2. `BLZ_DCMX_0M6_OWN_DHUB` and `BLZ_DCMX_0M6_OWN_DWH` each receive only `CREATE DATABASE`, `CREATE ROLE`, and `CREATE WAREHOUSE` on the account. `BLZ_DCMX_0M6_PROJECT_DHUB` is owned and operated by `BLZ_DCMX_0M6_OWN_DHUB`; `BLZ_DCMX_0M6_PROJECT_DWH` is owned and operated by `BLZ_DCMX_0M6_OWN_DWH`. Ownership created through their declarations supplies authority over their own database, schemas, database roles, warehouses and grants.
+3. The exact local compute composition is:
+   - `USAGE` on `BLZ_DCMX_0M6_DHUB_WH_INTERACTIVE` to `BLZ_DCMX_0M6_DHUB_WH_INTERACTIVE_USAGE`, then that usage role to `BLZ_DCMX_0M6_DHUB_FUNCTIONAL`;
+   - `USAGE` on `BLZ_DCMX_0M6_DHUB_WH_SERVICE` to `BLZ_DCMX_0M6_DHUB_WH_SERVICE_USAGE`, then that usage role to `BLZ_DCMX_0M6_DHUB_SERVICE`;
+   - `USAGE` on `BLZ_DCMX_0M6_DWH_WH_INTERACTIVE` to `BLZ_DCMX_0M6_DWH_WH_INTERACTIVE_USAGE`, then that usage role to `BLZ_DCMX_0M6_DWH_FUNCTIONAL`; and
+   - `USAGE` on `BLZ_DCMX_0M6_DWH_WH_SERVICE` to `BLZ_DCMX_0M6_DWH_WH_SERVICE_USAGE`, then that usage role to `BLZ_DCMX_0M6_DWH_SERVICE`.
+   No role receives the other compute category; warehouse usage confers no ownership or administration.
+4. DHUB declares `USAGE` on `BLZ_DCMX_0M6_DHUB_DB`, `USAGE` on `BLZ_DCMX_0M6_DHUB_DB.DATA`, and `SELECT` on `BLZ_DCMX_0M6_DHUB_DB.DATA.SOURCE` to database role `BLZ_DCMX_0M6_DHUB_DB.BLZ_DCMX_0M6_SOURCE_READER`. As its owner, `BLZ_DCMX_0M6_OWN_DHUB` may grant that database role to the already existing `BLZ_DCMX_0M6_DWH_SERVICE` account role; it receives no ownership or administration over the recipient role.
+5. Data access deliberately stops there: neither functional role receives a database role or data-object grant; `BLZ_DCMX_0M6_DHUB_SERVICE` receives none; and `BLZ_DCMX_0M6_DWH_DB.BLZ_DCMX_0M6_LOCAL_READER` is deliberately empty because this test declares no local DWH table. No other database/schema/table/view access grant is proposed, including one for optional view creation; evidence that one is required is a stop-and-revise result.
+6. `BLZ_DCMX_0M6_OWN_PLATFORM`, if bootstrapped, receives no account privilege, inheritance, object, grant, identity, or DCM project in this experiment.
+7. No deployment or workload role receives global `MANAGE GRANTS`, an admin/system role, another domain's ownership role, or secondary-role assistance. Deployment and plan sessions pin the matching identity and primary role with secondary roles disabled.
 
 If DCM project creation, planning, or deployment requires any additional project/schema privilege or role relationship, stop and record the exact missing prerequisite. Jørgen must explicitly revise and reapprove this contract before any broadening.
 
@@ -43,7 +49,7 @@ If DCM project creation, planning, or deployment requires any additional project
 
 Each stage is a complete desired state for its boundary, never a delta that omits earlier declarations:
 
-1. **Human bootstrap:** Jørgen creates only the approved fresh namespace prerequisites and the two populated project records. Optional `OWN_PLATFORM` creates no platform declaration.
+1. **Human bootstrap:** Jørgen creates only the approved fresh namespace prerequisites and the two populated project records. Optional `BLZ_DCMX_0M6_OWN_PLATFORM` creates no platform declaration.
 2. **Independent bases:** DHUB base and DWH base may be planned and human-deployed in either order. Each base includes its full inventory and all local composition. The DWH base creates and retains the recipient service role.
 3. **DHUB boundary grant:** only after both bases exist, the next DHUB desired state retains every DHUB base declaration and adds the source-reader-to-DWH-service grant. A later DHUB plan must show no accidental base removal.
 4. **Optional dependent object:** only if retained in the approved test, the next DWH desired state retains every DWH base declaration and adds the view. Its prerequisites are both bases, the source grant if creation needs it, and any object-specific privilege explicitly approved after evidence; it is not a prerequisite for unrelated DWH objects.
@@ -87,4 +93,4 @@ Stop immediately on an unexpected existing identifier, deletion, replacement, ow
 
 Commit only the contract and later sanitized results needed to support claims. Remove credentials, private/public key material, tokens, account locators, personal paths, connection configuration, and unrelated account metadata from captures. Record tool version, UTC time, stage, exact disposable identifiers, actor category, exit status, and relevant plan/check rows. Raw transcripts and temporary agent files are not durable evidence.
 
-Jørgen owns cleanup of DCM projects, declared objects, identities, roles, credentials, and local key material, bounded strictly to `BLZ_DCMX_0M6`. The default decision is cleanup after evidence acceptance. Retention for inspection requires Jørgen to record the reason, owner, deadline, and eventual cleanup result on the execution ticket. Partial execution still requires the same namespace-bounded human cleanup; agents do not clean up.
+Jørgen owns cleanup of the exact `BLZ_DCMX_0M6` inventory listed above, its credentials, and its local key material; the prefix alone is not cleanup authority. The default decision is cleanup after evidence acceptance. Retention for inspection requires Jørgen to record the reason, owner, deadline, and eventual cleanup result on the execution ticket. Partial execution still requires the same namespace-bounded human cleanup; agents do not clean up.
