@@ -78,10 +78,10 @@ These checks are human-run and separately authorized; this contract does not aut
 ## Checkpoints, evidence hygiene, and cleanup
 
 1. Before live action, independent review and Jørgen approval cover this contract, exact identifiers, unresolved stage mechanic, privileges, evidence handling, and cleanup.
-2. Before each agent plan, Jørgen confirms the named project/control prerequisites and preceding human deployment. After each plan, Jørgen decides whether it matches the contract; only Jørgen may create or deploy.
+2. Before each initial pre-deploy base plan, Jørgen confirms the named project/control prerequisites. Before each replan or dependent-stage plan, he also confirms the preceding human deployment. After each plan, Jørgen decides whether it matches the contract; only Jørgen may create or deploy.
 3. Before verification, Jørgen separately authorizes and creates the exact harness state. After evidence is sanitized and committed, Jørgen authorizes exact-inventory cleanup or records retention reason, owner, deadline, and eventual cleanup result.
 
-Stop on an existing disposable identifier, absent prerequisite, unexpected object/change/removal/ownership transfer, privilege request, plan or no-change-replan error, evidence leak, namespace escape, or actual/approved-state mismatch. Preserve sanitized context and require a new human checkpoint before any retry.
+Stop on an initial disposable-identifier collision, an identifier unexpected for the current stage, absent prerequisite, unexpected object/change/removal/ownership transfer, privilege request, plan or no-change-replan error, evidence leak, namespace escape, or actual/approved-state mismatch. Preserve sanitized context and require a new human checkpoint before any retry.
 
 Committed evidence excludes credentials, key material, tokens, account locators, personal paths, connection configuration, raw transcripts, and unrelated account metadata. It includes only claim-relevant rows plus tool version, UTC time, stage, exact identifiers, actor category, and exit status.
 
