@@ -1,6 +1,6 @@
 # Three-boundary DCM verification contract
 
-**Proposed, unexecuted, not approved.** Documentation only; no live action now. Implements Chart `rvn-9n3` comment `01a0d33c-390e-7a60-aad2-5e1fc7b9ab55` with accepted candidate `rvn-9n3.5` at Gondolin library commit `8c026bd`. Blizzard commit `630708c` supports only observed two-project mechanics: projects in `SNOWFLAKE_LEARNING_DB.DCM`, container grants, non-admin deployment, implicit `PUBLIC`, positive/negative access checks; not this sequence or privilege envelope.
+**Proposed, unexecuted, not approved.** Documentation only; no live action now. Implements Chart `rvn-9n3` comment `01a0d33c-390e-7a60-aad2-5e1fc7b9ab55` with accepted candidate `rvn-9n3.5` at Gondolin library commit `8c026bd`. Blizzard commit `630708c` supports only observed two-project mechanics at the historical experiment location `SNOWFLAKE_LEARNING_DB.DCM`: container grants, non-admin deployment, implicit `PUBLIC`, and positive/negative access checks; not the current type or state of that location, this sequence, or this privilege envelope. That location is provenance only and is not reused or inspected.
 
 ## Authority and scope
 
@@ -17,14 +17,14 @@ Use only these inputs:
 | Input | Value | Treatment |
 | --- | --- | --- |
 | `NAMESPACE` | `BLZ_DCMX_0M6` | disposable namespace |
-| `CONTROL_DATABASE` | `SNOWFLAKE_LEARNING_DB` | retained external input; never derived or cleaned |
-| `CONTROL_SCHEMA` | `DCM` | retained external input; never derived or cleaned |
+| `CONTROL_DATABASE` | `BLZ_DCMX_0M6_CONTROL_DB` | disposable; `NAMESPACE` + `_CONTROL_DB` |
+| `CONTROL_SCHEMA` | `BLZ_DCMX_0M6_CONTROL` | disposable; `NAMESPACE` + `_CONTROL` |
 | `CONTROL_WAREHOUSE` | `COMPUTE_WH` | retained external input; never derived or cleaned |
 
 Naming rules for the exact inventory below:
 
-- Form disposable account-scoped identifiers and project/database-role local names from unquoted uppercase `NAMESPACE` + `_` + the inventory's semantic suffix. `DHUB`/`DWH` are fixed domain suffixes, not configurable layers.
-- `DATA`, `SOURCE`, and implicit `PUBLIC` are fixed schema/table local names.
+- Form disposable account-scoped identifiers and project, schema, and database-role local names from unquoted uppercase `NAMESPACE` + `_` + the inventory's semantic suffix. `DHUB`/`DWH` are fixed domain suffixes, not configurable layers.
+- `DATA`, `SOURCE`, and implicit `PUBLIC` are fixed domain schema/table local names.
 - Review schemas and database roles as `DATABASE.LOCAL_NAME`; use `DATABASE.SCHEMA.OBJECT` only for schema-contained objects.
 
 For supported future DCM definition contexts, use inputs rather than literals:
@@ -38,18 +38,18 @@ Snowflake [identifier requirements](https://docs.snowflake.com/en/sql-reference/
 
 ### Exact disposable inventory
 
-In the existing personal Blizzard account, Jørgen must approve one deterministic resolved inventory with full database/schema qualification and retained inputs before collision checks, plan review, or cleanup. This example is **blocked** until separate stage-state reconciliation is reviewed and approved. Cleanup uses only approved exact names, never prefix wildcards.
+In the existing personal Blizzard account, Jørgen must approve one deterministic resolved inventory with full database/schema qualification and retained inputs before collision checks, plan review, or cleanup. Before bootstrap he checks every account-scoped name below for collision; after creating `BLZ_DCMX_0M6_CONTROL_DB` he checks `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL`, then `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL.BLZ_DCMX_0M6_PROJECT_DHUB` and `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL.BLZ_DCMX_0M6_PROJECT_DWH`, before creating each. Any pre-existing exact name is a collision and a stop, not an adoption target. This example is **blocked** until separate stage-state reconciliation is reviewed and approved. Cleanup uses only approved exact names, never prefix wildcards.
 
 | Class | Proposed inventory |
 | --- | --- |
-| ownership/deployment | account roles `BLZ_DCMX_0M6_OWN_DHUB`, `BLZ_DCMX_0M6_OWN_DWH`; service users `BLZ_DCMX_0M6_DEPLOY_DHUB`, `BLZ_DCMX_0M6_DEPLOY_DWH`; their one-role assignments and credentials |
-| DCM control | projects `SNOWFLAKE_LEARNING_DB.DCM.BLZ_DCMX_0M6_PROJECT_DHUB`, `SNOWFLAKE_LEARNING_DB.DCM.BLZ_DCMX_0M6_PROJECT_DWH`, owned by matching ownership roles |
+| ownership/deployment | account roles `BLZ_DCMX_0M6_OWN_CONTROL`, `BLZ_DCMX_0M6_OWN_DHUB`, `BLZ_DCMX_0M6_OWN_DWH`; service users `BLZ_DCMX_0M6_DEPLOY_DHUB`, `BLZ_DCMX_0M6_DEPLOY_DWH`; their one-role assignments and credentials |
+| DCM control | database `BLZ_DCMX_0M6_CONTROL_DB`, schema `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL`, and projects `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL.BLZ_DCMX_0M6_PROJECT_DHUB`, `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL.BLZ_DCMX_0M6_PROJECT_DWH`; control database/schema owned by `BLZ_DCMX_0M6_OWN_CONTROL`, projects owned by matching domain ownership roles |
 | DHUB desired state | roles `BLZ_DCMX_0M6_DHUB_FUNCTIONAL`, `BLZ_DCMX_0M6_DHUB_SERVICE`, `BLZ_DCMX_0M6_DHUB_WH_INTERACTIVE_USAGE`, `BLZ_DCMX_0M6_DHUB_WH_SERVICE_USAGE`; warehouses `BLZ_DCMX_0M6_DHUB_WH_INTERACTIVE`, `BLZ_DCMX_0M6_DHUB_WH_SERVICE`; database `BLZ_DCMX_0M6_DHUB_DB`; requested schema `BLZ_DCMX_0M6_DHUB_DB.DATA`; table `BLZ_DCMX_0M6_DHUB_DB.DATA.SOURCE`; database role `BLZ_DCMX_0M6_DHUB_DB.BLZ_DCMX_0M6_SOURCE_READER` |
 | DWH desired state | roles `BLZ_DCMX_0M6_DWH_FUNCTIONAL`, `BLZ_DCMX_0M6_DWH_SERVICE`, `BLZ_DCMX_0M6_DWH_WH_INTERACTIVE_USAGE`, `BLZ_DCMX_0M6_DWH_WH_SERVICE_USAGE`; warehouses `BLZ_DCMX_0M6_DWH_WH_INTERACTIVE`, `BLZ_DCMX_0M6_DWH_WH_SERVICE`; database `BLZ_DCMX_0M6_DWH_DB`; requested schema `BLZ_DCMX_0M6_DWH_DB.DATA` |
 | cross-domain edge | DHUB grants `BLZ_DCMX_0M6_DHUB_DB.BLZ_DCMX_0M6_SOURCE_READER` to existing `BLZ_DCMX_0M6_DWH_SERVICE`; ownership stays put |
 | human verification harness | service users `BLZ_DCMX_0M6_VERIFY_CONSUMERS`, `BLZ_DCMX_0M6_VERIFY_UNRELATED`; role `BLZ_DCMX_0M6_UNRELATED`; all four functional/service roles assigned to `BLZ_DCMX_0M6_VERIFY_CONSUMERS`, unrelated role to `BLZ_DCMX_0M6_VERIFY_UNRELATED`; temporary `USAGE` on `BLZ_DCMX_0M6_DWH_WH_SERVICE` to unrelated role; credentials and local key material |
 
-`SNOWFLAKE_LEARNING_DB`, its `DCM` schema, and `COMPUTE_WH` are retained external prerequisites: neither project owns, replaces, alters, or cleans them.
+`COMPUTE_WH` is the only retained external container: neither project owns, replaces, alters, or cleans it. The historical `SNOWFLAKE_LEARNING_DB.DCM` location is not a prerequisite.
 
 Expected implicit `BLZ_DCMX_0M6_DHUB_DB.PUBLIC` and `BLZ_DCMX_0M6_DWH_DB.PUBLIC` are check/cleanup inventory within disposable databases, **not** requested domain schemas; there is no permission to mutate system-managed `PUBLIC`. Only `.DATA` is requested.
 
@@ -59,9 +59,10 @@ Every disposable warehouse: `XSMALL`, initially suspended, auto-resume on, 60-se
 
 ## Proposed permissions
 
-**Proposal, neither proven sufficient nor minimum.** The prior local experiment observed the control-access envelope, not its sufficiency or minimality here.
+**Bounded proposal, neither proven sufficient nor minimum.** Evidence does not settle shared control-container ownership or the exact sufficient privilege set. The proposed separation is: `BLZ_DCMX_0M6_OWN_CONTROL` owns only the disposable control database/schema; each domain ownership role owns its project and domain desired state. The prior local experiment observed a control-access envelope, not its sufficiency or minimality here.
 
-- Each ownership role gets account `CREATE DATABASE`, `CREATE ROLE`, and `CREATE WAREHOUSE`; `USAGE` on the retained control database and schema; `CREATE DCM PROJECT` and `CREATE STAGE` on the control schema; and `USAGE` on the retained control warehouse. These are its only proposed control-container/account grants.
+- Jørgen uses privileged administration to create `BLZ_DCMX_0M6_OWN_CONTROL`, `BLZ_DCMX_0M6_CONTROL_DB`, and `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL`, and leaves `OWNERSHIP` on that database and schema with `BLZ_DCMX_0M6_OWN_CONTROL`. No deployment user receives the control ownership role.
+- Each domain ownership role gets account `CREATE DATABASE`, `CREATE ROLE`, and `CREATE WAREHOUSE`; `USAGE` on `BLZ_DCMX_0M6_CONTROL_DB` and `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL`; `CREATE DCM PROJECT` and `CREATE STAGE` on that control schema; and `USAGE` on retained `COMPUTE_WH`. These are its only proposed control-container/account grants.
 - Declaration-created ownership is proposed to cover each role's own database, requested schema, database roles, warehouses, account roles, and grants. Ownership/deployment sessions use no global `MANAGE GRANTS`, admin/system role, other domain ownership role, or secondary-role assistance.
 - Each domain grants interactive warehouse `USAGE` to its interactive-usage role, then that role to its functional role; it grants service warehouse `USAGE` to its service-usage role, then that role to its service role. Consumer functional/service roles get no other compute category. Ownership roles necessarily own both domain warehouses and are outside that consumer claim.
 - DHUB grants database and `DATA` schema `USAGE`, and `SOURCE` table `SELECT`, to `BLZ_DCMX_0M6_DHUB_DB.BLZ_DCMX_0M6_SOURCE_READER`; it grants that database role to already-existing `BLZ_DCMX_0M6_DWH_SERVICE`. This is the only proposed data-access edge. Neither functional role nor `BLZ_DCMX_0M6_DHUB_SERVICE` is intended to have data access; the harness does not test their effective denial.
@@ -74,7 +75,7 @@ The candidate's platform-owner permission, empty DWH local-reader permission, an
 
 Each stage retains earlier declarations; these are complete states, not deltas. Only Jørgen creates projects and runs deployments; only those human-run deployments create domain objects, roles, and grants.
 
-1. **Human bootstrap and project creation:** Jørgen uses privileged administration for the approved prerequisites: matching ownership roles, deployment users/credentials, exact control-container/account grants, and one-role assignments. Under each matching non-admin ownership role, he creates the fully qualified project.
+1. **Human bootstrap and project creation:** after the staged exact-name collision checks, Jørgen uses privileged administration to create the control ownership role, control database/schema, matching domain ownership roles, deployment users/credentials, exact proposed grants, and one-role assignments. He verifies control ownership and grants, then under each matching non-admin domain ownership role creates its fully qualified project: `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL.BLZ_DCMX_0M6_PROJECT_DHUB` or `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL.BLZ_DCMX_0M6_PROJECT_DWH`.
 2. **Independent bases:** DHUB and DWH may be planned and human-deployed in either order. Each state retains every listed domain object, local compute grant, and role composition; DWH creates and retains `BLZ_DCMX_0M6_DWH_SERVICE`.
 3. **Boundary release:** After **both** bases, DHUB retains its entire base and adds the source-reader-to-DWH-service edge. DWH remains unchanged; there is no optional dependent-object release.
 4. **Verification readiness:** After both bases and boundary deployment, Jørgen sets up harness assignments, temporary unrelated-role warehouse `USAGE`, and any source row needed for a meaningful result. This is privileged human setup, not domain desired state or DCM-grant evidence. Assignments pin one primary consumer role per check with secondary roles disabled; the temporary grant gives the unrelated role usable DWH compute for data-denial testing. Runtime data is neither a deployment prerequisite nor proof of success.
@@ -95,7 +96,7 @@ Plans show DCM proposals against then-current state, not creation, ownership, de
 
 Jørgen captures separate inspection/runtime evidence:
 
-- **Owners/direct edges:** actual owners of both projects and every disposable role, database, requested/implicit schema, warehouse, database role, table; direct warehouse→usage-role→consumer-role and DHUB object→database-role→DWH-service grants; direct absence of global `MANAGE GRANTS` and unintended role inheritance. Direct grant rows do not prove effective access.
+- **Owners/direct edges:** actual owners of the control database/schema, both projects, and every disposable role, domain database, requested/implicit schema, warehouse, database role, and table; direct control-container privileges, warehouse→usage-role→consumer-role and DHUB object→database-role→DWH-service grants; direct absence of global `MANAGE GRANTS`, control-role assignment to deployment users, and unintended role inheritance. Direct grant rows do not prove effective access.
 - **Positive data path:** as `BLZ_DCMX_0M6_VERIFY_CONSUMERS`, primary `BLZ_DCMX_0M6_DWH_SERVICE`, secondary roles disabled, warehouse `BLZ_DCMX_0M6_DWH_WH_SERVICE`, `SELECT` from `BLZ_DCMX_0M6_DHUB_DB.DATA.SOURCE` succeeds. Record active role/warehouse; this proves that session's effective path, not just a direct grant.
 - **Compute separation:** four separately pinned sessions: each functional role uses its domain interactive warehouse and is denied its service warehouse; each service role uses its domain service warehouse and is denied its interactive warehouse. Record successful active-warehouse checks and authorization failures; ownership-role behavior proves nothing about consumer separation.
 - **Unrelated denial:** as `BLZ_DCMX_0M6_VERIFY_UNRELATED`, primary `BLZ_DCMX_0M6_UNRELATED`, secondary roles disabled, temporary DWH service-warehouse access: same source `SELECT` fails for data authorization. Record nonzero exit/error; absence of compute is not data denial.
@@ -105,7 +106,7 @@ These human-run checks require separate authorization; **not now**.
 ### Checkpoints and stops
 
 1. Before live action: independent review and Jørgen approval of contract, exact names, unresolved stage mechanic, privileges, evidence handling, cleanup.
-2. Before each initial base plan Jørgen confirms named project/control prerequisites; before each replan or dependent plan, prior human deployment too. After each plan he decides whether it matches; only he creates/deploys.
+2. Before each initial base plan Jørgen confirms the exact control database, schema, fully qualified project, owners, and proposed grants; before each replan or dependent plan, prior human deployment too. After each plan he decides whether it matches; only he creates/deploys.
 3. Before verification: Jørgen authorizes/creates exact harness. After sanitizing and committing evidence: he authorizes exact-inventory cleanup or records retention reason, owner, deadline, and eventual cleanup result.
 
 **Stop** on initial disposable-name collision, unexpected identifier for stage, absent prerequisite, unexpected object/change/removal/ownership transfer, privilege request, plan or replan error, evidence leak, namespace escape, or actual/approved-state mismatch. Preserve sanitized context; require new human checkpoint before retry.
@@ -118,9 +119,10 @@ Jørgen cleans up in dependency-safe order, using only the approved exact invent
 
 1. Remove harness assignments and the temporary warehouse grant.
 2. Remove harness users, role, credentials, and keys.
-3. Remove the domain cross-edge and DCM-managed objects. Dropping disposable databases includes requested `DATA` and implicit `PUBLIC`.
-4. Remove both fully qualified projects and any resolved project-owned stage state.
-5. Remove deployment users, credentials, and keys.
-6. Remove ownership roles.
+3. Remove the domain cross-edge and DCM-managed objects. Dropping disposable domain databases includes requested `DATA` and implicit `PUBLIC`.
+4. Remove exact projects `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL.BLZ_DCMX_0M6_PROJECT_DHUB` and `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL.BLZ_DCMX_0M6_PROJECT_DWH`, plus any separately inventoried project-owned stage state; stop if unresolved dependencies remain.
+5. Remove `BLZ_DCMX_0M6_CONTROL_DB.BLZ_DCMX_0M6_CONTROL`, then `BLZ_DCMX_0M6_CONTROL_DB`, only after exact inventory and dependency checks show them empty of retained dependencies.
+6. Remove deployment users, credentials, and keys.
+7. Remove domain ownership roles, then `BLZ_DCMX_0M6_OWN_CONTROL` after its owned objects are gone.
 
-Never alter retained `SNOWFLAKE_LEARNING_DB`, `SNOWFLAKE_LEARNING_DB.DCM`, or `COMPUTE_WH`. Partial execution needs the same bounded human cleanup and a recorded result; agents never clean up.
+Never alter retained `COMPUTE_WH` or the historical `SNOWFLAKE_LEARNING_DB.DCM` location. Partial execution needs the same bounded human cleanup and a recorded result; agents never clean up.
