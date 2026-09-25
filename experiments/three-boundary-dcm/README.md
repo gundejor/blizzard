@@ -12,7 +12,7 @@ Company accounts and repositories, CI, production hardening, identity lifecycle,
 
 ## Central naming contract
 
-The rule is: each disposable identifier is the unquoted uppercase `NAMESPACE` followed by `_` and the semantic suffix shown in the resolved inventory below; every database- or schema-local identifier is carried and reviewed as its full `DATABASE.SCHEMA.OBJECT` name. The rule has only these explicit inputs for this experiment:
+The rule is: disposable account-scoped identifiers and project or database-role local names are formed from the unquoted uppercase `NAMESPACE`, `_`, and the semantic suffix shown in the resolved inventory below. The schema and table local names `DATA`, `SOURCE`, and implicit `PUBLIC` are fixed names instead. Schemas and database roles are carried and reviewed as two-part `DATABASE.LOCAL_NAME` identifiers, while only schema-contained objects are carried and reviewed as three-part `DATABASE.SCHEMA.OBJECT` identifiers. The rule has only these explicit inputs for this experiment:
 
 | Input | Resolved value | Treatment |
 | --- | --- | --- |
