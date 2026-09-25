@@ -10,9 +10,26 @@ This assignment makes no live call. In any separately authorized execution, an a
 
 Company accounts and repositories, CI, production hardening, identity lifecycle, shared-warehouse policy, broader DCM lifecycle behavior, implementation, external research, and all live calls in this assignment are excluded.
 
-## Exact inventory and retained control containers
+## Central naming contract
 
-The fresh disposable namespace is `BLZ_DCMX_0M6` in the existing personal Blizzard account. Before bootstrap, Jørgen confirms that every listed disposable identifier is absent. Cleanup is limited to this exact inventory, never a prefix wildcard.
+The rule is: each disposable identifier is the unquoted uppercase `NAMESPACE` followed by `_` and the semantic suffix shown in the resolved inventory below; every database- or schema-local identifier is carried and reviewed as its full `DATABASE.SCHEMA.OBJECT` name. The rule has only these explicit inputs for this experiment:
+
+| Input | Resolved value | Treatment |
+| --- | --- | --- |
+| `NAMESPACE` | `BLZ_DCMX_0M6` | disposable experiment namespace |
+| `CONTROL_DATABASE` | `SNOWFLAKE_LEARNING_DB` | retained external input; never derived or cleaned |
+| `CONTROL_SCHEMA` | `DCM` | retained external input; never derived or cleaned |
+| `CONTROL_WAREHOUSE` | `COMPUTE_WH` | retained external input; never derived or cleaned |
+
+`DHUB` and `DWH` are the two fixed domain suffixes in this bounded design, not additional configurable naming layers. For example, the rule resolves the DHUB database to `BLZ_DCMX_0M6_DHUB_DB`, its requested schema to `BLZ_DCMX_0M6_DHUB_DB.DATA`, and its project to `SNOWFLAKE_LEARNING_DB.DCM.BLZ_DCMX_0M6_PROJECT_DHUB`. The inventory below is the single resolved example and source of exact names for review and human action; future DCM definition files must reference these inputs rather than repeat resolved literals.
+
+Where a future DCM definition needs a varying identifier, use DCM's documented Jinja2 `{{ variable }}` substitution, with values declared in `manifest.yml` under `templating.defaults` or `templating.configurations` and selected by the target; a plan-time `--variable`/`-D` override has higher precedence. The documented precedence is defaults, selected configuration, then runtime values. This contract does not claim that DCM templating applies to manifest project/target identifiers or to human bootstrap, harness, or cleanup operations; those unsupported contexts consume the reviewed resolved inventory directly. It adds no custom renderer, naming code, manifest, or script.
+
+Snowflake's [identifier requirements](https://docs.snowflake.com/en/sql-reference/identifiers-syntax) (retrieved 2026-09-25 UTC) say unquoted identifiers start with an ASCII letter or underscore, then contain only letters, underscores, decimal digits, or dollar signs, and are stored/resolved uppercase. Double-quoted identifiers preserve case and permit otherwise excluded characters but must be referenced exactly by default; either form is limited to 255 characters. The uppercase values here are a local experiment choice, not a universal Snowflake naming best practice. Snowflake's [DCM project files and templating documentation](https://docs.snowflake.com/en/user-guide/dcm-projects/dcm-projects-files), [DCM plan option reference](https://docs.snowflake.com/en/developer-guide/snowflake-cli/command-reference/dcm-commands/plan), and [`EXECUTE DCM PROJECT` reference](https://docs.snowflake.com/en/sql-reference/sql/execute-dcm-project) (retrieved 2026-09-25 UTC) document Jinja2 variables, manifest configurations, CLI `--variable`/`-D`, and SQL runtime overrides. They do not establish that Snowflake CLI's separate project-template syntax applies to DCM definitions; no such syntax is used here.
+
+## Resolved exact inventory and retained control containers
+
+The resolved example uses namespace `BLZ_DCMX_0M6` in the existing personal Blizzard account. Before any collision check, plan review, or exact dependency-safe human cleanup, Jørgen must approve one deterministic, fully resolved inventory containing full database/schema qualification and the explicit retained-container inputs. The current example is not execution-ready until the separate stage-state reconciliation is reviewed and approved. Cleanup is limited to the approved exact inventory, never a prefix wildcard.
 
 | Class | Complete proposed disposable inventory |
 | --- | --- |
